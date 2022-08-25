@@ -57,5 +57,17 @@
     line-height: 1.2;
     letter-spacing: -0.64px;
     color: #000;
+    background-color: #f8f8f8;
+  }
+
+.shadow{
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, .1);
+}
+
+  .wrap{
+    position: relative;
+    display: block;
+    width: 90%;
+    margin: 0 auto;
   }
 </style>
