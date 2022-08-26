@@ -40,7 +40,7 @@
 	}
 </script>
 
-<style scoped>
+<style>
 	.input-wrap {
 		margin: 20px;
 
@@ -60,6 +60,7 @@
 		width: 93%;
 		font-size: 15px;
 		font-family: 'IBM Plex Sans KR';
+		caret-color: hotpink;
 	}
 	.title:focus{
 		outline: none;
@@ -67,6 +68,7 @@
 	.addbt{
 		float: right;
 		cursor: pointer;
+		color: hotpink;
 	}
 	.addbt-icon{	
 		vertical-align: middle;

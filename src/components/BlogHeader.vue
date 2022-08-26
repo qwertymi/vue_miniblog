@@ -12,7 +12,7 @@
 	}
 </script>
 
-<style scoped>
+<style>
 	h1 {
 		padding-top: 20px;
 		text-align: center;

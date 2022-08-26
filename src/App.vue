@@ -57,11 +57,11 @@
     line-height: 1.2;
     letter-spacing: -0.64px;
     color: #000;
-    background-color: #f8f8f8;
+    background-color: rgb(240, 233, 233);
   }
 
 .shadow{
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, .1);
+  box-shadow: 10px 7px 10px 1px rgba(124, 102, 102, .18);
 }
 
   .wrap{
