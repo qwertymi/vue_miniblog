@@ -8,9 +8,9 @@
 <script>
 
 export default {
-  setup(){
+  setup(props, context){
       const allRmMemo = () =>{
-        localStorage.clear();
+        context.emit("deleteitem");
       }
     return{
       allRmMemo

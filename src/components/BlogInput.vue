@@ -13,33 +13,15 @@
 		ref
 	} from 'vue'
 	export default {
-		setup() {
+		setup(props, context) {
 			const newItem = ref('')
-
-			// 현재시간계산, 중복되지않는 값을 저장
-			// 10보다 작은 값에 0을 붙임
-			const addZero = (n) => {
-				return n < 10 ? '0' + n : n;
-			}
-			// 현재 시간을 리턴
-			const getCurrentDate = () => {
-				let date = new Date();
-				return date.getFullYear().toString() + addZero(date.getMonth() + 1) + addZero(date.getDate()) +
-					addZero(date.getHours()) + addZero(date.getMinutes()) + addZero(date.getSeconds());
-			}
 
 			const addItem = () => {
 				let temp = newItem.value;
 				temp = temp.trim()
 
 				if (temp !== '') {
-					let memoTemp = {
-						id: getCurrentDate(),
-						complete: false,
-						memotitle: newItem.value
-					};
-					localStorage.setItem(memoTemp.id, JSON.stringify(memoTemp));
-
+					context.emit("additem", temp);
 					resetItem();
 				}
 			}
@@ -60,7 +42,7 @@
 		margin: 20px;
 
 		position: relative;
-		display: block;	
+		display: block;
 		background-color: #fff;
 		height: 50px;
 		line-height: 50px;
@@ -70,24 +52,26 @@
 		padding-right: 2%;
 	}
 
-	.title{
+	.title {
 		border-style: none;
 		width: 93%;
 		font-size: 15px;
 		font-family: 'IBM Plex Sans KR';
 		caret-color: hotpink;
 	}
-	.title:focus{
+
+	.title:focus {
 		outline: none;
 	}
-	.addbt{
+
+	.addbt {
 		float: right;
 		cursor: pointer;
 		color: hotpink;
 	}
-	.addbt-icon{	
+
+	.addbt-icon {
 		vertical-align: middle;
 		font-size: 25px;
 	}
-
 </style>

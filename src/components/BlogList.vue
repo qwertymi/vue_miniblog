@@ -1,7 +1,8 @@
 <template>
 	<div class="list-wrap">
 		<ul>
-			<li v-for="(item,index) in memoArr" :key="index" class="shadow">
+			<!-- 새로고침없이 업데이트를 위해 props(memodata) 이용 -->
+			<li v-for="(item,index) in memodata" :key="index" class="shadow">
 
 				<i class="far fa-check-square checkbt" @click="updateMemo(item)" :class="{memoComplete:item.complete}"></i>
 
@@ -14,41 +15,21 @@
 </template>
 
 <script>
-	import {ref,reactive} from 'vue'
 	export default {
-		setup() {
-			// console.log(localStorage);
-			const total = ref(0);
-			total.value = localStorage.length;
+		props:['memodata'],
 
-			const memoArr = reactive([]);
-
-			if (total.value > 0) {
-				for (let i = 0; i < total.value; i++) {
-        let obj = localStorage.getItem( localStorage.key(i) );
-
-					memoArr.push(JSON.parse(obj));
-				}
-					// memoArr.sort();
-			}
+		setup(props, context) {
 
 			const removeMemo = (item, index) =>{
-				// 로컬스토리지 key를 통해 지움
-				localStorage.removeItem(item);
-				// memoArr 에서도 삭제
-				memoArr.splice(index, 1);
+				context.emit('removeitem', item, index);
 			}
 
 			// check
 			const updateMemo = (item) => {
-				// 로컬스토리지 - update 메소드 지원X
-				localStorage.removeItem(item.id);
-				item.complete = !item.complete;
-				localStorage.setItem(item.id, JSON.stringify(item));
+				context.emit("updateitem", item)
 			}
 
 			return {
-				memoArr,
 				removeMemo,
 				updateMemo
 			}

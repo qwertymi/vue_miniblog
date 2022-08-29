@@ -1,9 +1,9 @@
 <template>
   <div class="wrap">
     <BlogHeader />
-    <BlogInput />
-    <BlogList />
-    <BlogFooter />
+    <BlogInput v-on:additem="addMemo" />
+    <BlogList :memodata="memoArr" v-on:removeitem="deleteMemo" v-on:updateitem="updateMemo" />
+    <BlogFooter v-on:deleteitem="deleteAllMemo"/>
   </div>
 </template>
 
@@ -13,6 +13,11 @@
   import BlogList from './components/BlogList.vue'
   import BlogFooter from './components/BlogFooter.vue'
 
+  import {
+    ref,
+    reactive
+  } from 'vue';
+
   export default {
     name: 'App',
     components: {
@@ -20,7 +25,76 @@
       BlogInput,
       BlogList,
       BlogFooter
+    },
+    setup() {
+      const total = ref(0);
+      total.value = localStorage.length;
 
+      const memoArr = reactive([]);
+
+      if (total.value > 0) {
+        for (let i = 0; i < total.value; i++) {
+          let obj = localStorage.getItem(localStorage.key(i));
+
+          memoArr.push(JSON.parse(obj));
+        }
+        // memoArr.sort();
+      }
+
+
+      // 현재시간계산, 중복되지않는 값을 저장
+      // 10보다 작은 값에 0을 붙임
+      const addZero = (n) => {
+        return n < 10 ? '0' + n : n;
+      }
+      // 현재 시간을 리턴
+      const getCurrentDate = () => {
+        let date = new Date();
+        return date.getFullYear().toString() + addZero(date.getMonth() + 1) + addZero(date.getDate()) +
+          addZero(date.getHours()) + addZero(date.getMinutes()) + addZero(date.getSeconds());
+      }
+
+      const addMemo = (item) => {
+        let memoTemp = {
+          id: getCurrentDate(),
+          complete: false,
+          memotitle: item
+        };
+        localStorage.setItem(memoTemp.id, JSON.stringify(memoTemp));
+        memoArr.push(memoTemp);
+      }
+
+
+      const deleteMemo = (item, index) => {
+        console.log(item);
+        console.log(index);
+        // 로컬스토리지 key를 통해 지움
+        localStorage.removeItem(item);
+
+        // memoArr 에서도 삭제
+        memoArr.splice(index, 1);
+      }
+
+
+      const updateMemo = (item) => {
+        localStorage.removeItem(item.id);
+        item.complete = !item.complete;
+        localStorage.setItem(item.id, JSON.stringify(item));
+
+      }
+
+      const deleteAllMemo = () =>{
+        localStorage.clear();
+        memoArr.splice(0);
+      }
+
+      return {
+        memoArr,
+        addMemo,
+        deleteMemo,
+        updateMemo,
+        deleteAllMemo
+      }
     }
   }
 </script>
@@ -60,11 +134,11 @@
     background-color: rgb(240, 233, 233);
   }
 
-.shadow{
-  box-shadow: 10px 7px 10px 1px rgba(124, 102, 102, .18);
-}
+  .shadow {
+    box-shadow: 10px 7px 10px 1px rgba(124, 102, 102, .18);
+  }
 
-  .wrap{
+  .wrap {
     position: relative;
     display: block;
     width: 90%;
