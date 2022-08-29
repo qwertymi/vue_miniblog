@@ -1,9 +1,12 @@
 <template>
 	<div class="list-wrap">
 		<ul>
-			<li v-for="(item,index) in memoArr" :key="index">
-				{{item}}
-				<span class="rmbt" @click="removeMemo(item, index)"><i class="far fa-trash-alt"></i></span>
+			<li v-for="(item,index) in memoArr" :key="index" class="shadow">
+
+				<i class="far fa-check-square checkbt" @click="updateMemo(item)" :class="{memoComplete:item.complete}"></i>
+
+				<span :class="{memoCompleteTxt:item.complete}">{{item.memotitle}}</span>
+				<span class="rmbt" @click="removeMemo(item.id, index)"><i class="far fa-trash-alt"></i></span>
 			</li>
 
 		</ul>
@@ -22,10 +25,12 @@
 
 			if (total.value > 0) {
 				for (let i = 0; i < total.value; i++) {
-					memoArr.push(localStorage.key(i));
-				}
-			}
+        let obj = localStorage.getItem( localStorage.key(i) );
 
+					memoArr.push(JSON.parse(obj));
+				}
+					// memoArr.sort();
+			}
 
 			const removeMemo = (item, index) =>{
 				// 로컬스토리지 key를 통해 지움
@@ -34,9 +39,18 @@
 				memoArr.splice(index, 1);
 			}
 
+			// check
+			const updateMemo = (item) => {
+				// 로컬스토리지 - update 메소드 지원X
+				localStorage.removeItem(item.id);
+				item.complete = !item.complete;
+				localStorage.setItem(item.id, JSON.stringify(item));
+			}
+
 			return {
 				memoArr,
-				removeMemo
+				removeMemo,
+				updateMemo
 			}
 		}
 
@@ -64,6 +78,23 @@ ul{
 		transition: color 0.3s;
 	}
 	.rmbt:hover{
-		color: #333;
+		color: pink;
 	}
+	.checkbt{
+		color: #ddd;
+		
+		line-height: 50px;
+		margin-right: 10px;
+		cursor: pointer;
+	}
+
+	.memoComplete{
+		color: hotpink;
+	}
+
+		.memoCompleteTxt{
+			color: hotpink;
+			text-decoration: line-through;
+		}
+
 </style>

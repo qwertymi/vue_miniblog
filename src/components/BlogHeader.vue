@@ -1,7 +1,7 @@
 <template>
 	<header>
 		<h1>
-			Blog
+			TODO List
 		</h1>
 	</header>
 </template>

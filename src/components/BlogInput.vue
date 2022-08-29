@@ -3,7 +3,7 @@
 		<input type="text" v-model="newItem" class="title" maxlength="40" @keyup.enter="addItem">
 		<!-- <button @click="addItem">추가</button> -->
 		<span @click="addItem" class="addbt">
-				<i class="far fa-plus-square addbt-icon"></i>
+			<i class="far fa-plus-square addbt-icon"></i>
 		</span>
 	</div>
 </template>
@@ -15,21 +15,36 @@
 	export default {
 		setup() {
 			const newItem = ref('')
+
+			// 현재시간계산, 중복되지않는 값을 저장
+			// 10보다 작은 값에 0을 붙임
+			const addZero = (n) => {
+				return n < 10 ? '0' + n : n;
+			}
+			// 현재 시간을 리턴
+			const getCurrentDate = () => {
+				let date = new Date();
+				return date.getFullYear().toString() + addZero(date.getMonth() + 1) + addZero(date.getDate()) +
+					addZero(date.getHours()) + addZero(date.getMinutes()) + addZero(date.getSeconds());
+			}
+
 			const addItem = () => {
 				let temp = newItem.value;
-				// localStorage.setItem(키, 값_json)
-				// json 저장
-				// {complete: flase, title:메모내용, icon:파일명}
-
 				temp = temp.trim()
+
 				if (temp !== '') {
-					localStorage.setItem(temp, temp)
+					let memoTemp = {
+						id: getCurrentDate(),
+						complete: false,
+						memotitle: newItem.value
+					};
+					localStorage.setItem(memoTemp.id, JSON.stringify(memoTemp));
+
 					resetItem();
 				}
-
 			}
-			const resetItem = () =>{
-				newItem.value='';
+			const resetItem = () => {
+				newItem.value = '';
 			}
 
 			return {
