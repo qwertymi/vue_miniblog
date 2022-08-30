@@ -1,9 +1,10 @@
 <template>
   <div class="wrap">
     <BlogHeader />
-    <BlogInput v-on:additem="addMemo" />
-    <BlogList :memodata="memoArr" v-on:removeitem="deleteMemo" v-on:updateitem="updateMemo" />
-    <BlogFooter v-on:deleteitem="deleteAllMemo"/>
+    <BlogInput @additem="addMemo" />
+    <BlogList :memodata="memoArr" @removeitem="deleteMemo" @updateitem="updateMemo" />
+    <BlogFooter @deleteitem="deleteAllMemo" />
+    <IntroView @closeintro="hideIntro" v-if="introShow" />
   </div>
 </template>
 
@@ -12,6 +13,7 @@
   import BlogInput from './components/BlogInput.vue'
   import BlogList from './components/BlogList.vue'
   import BlogFooter from './components/BlogFooter.vue'
+  import IntroView from './components/IntroView.vue'
 
   import {
     ref,
@@ -24,7 +26,8 @@
       BlogHeader,
       BlogInput,
       BlogList,
-      BlogFooter
+      BlogFooter,
+      IntroView
     },
     setup() {
       const total = ref(0);
@@ -53,12 +56,22 @@
         return date.getFullYear().toString() + addZero(date.getMonth() + 1) + addZero(date.getDate()) +
           addZero(date.getHours()) + addZero(date.getMinutes()) + addZero(date.getSeconds());
       }
+      const getCurrentTime = () => {
+        let date = new Date();
+        return date.getFullYear().toString() + "년 " + addZero(date.getMonth() + 1) + "월 " + addZero(date.getDate()) +
+          "일 " +
+          addZero(date.getHours()) + ":" + addZero(date.getMinutes())
+      }
 
-      const addMemo = (item) => {
+      const iconArr = ['icon1.png', 'icon2.png'];
+
+      const addMemo = (item, index) => {
         let memoTemp = {
           id: getCurrentDate(),
           complete: false,
-          memotitle: item
+          memotitle: item,
+          memodate: getCurrentTime(),
+          memoicon: iconArr[index]
         };
         localStorage.setItem(memoTemp.id, JSON.stringify(memoTemp));
         memoArr.push(memoTemp);
@@ -66,26 +79,41 @@
 
 
       const deleteMemo = (item, index) => {
-        console.log(item);
-        console.log(index);
         // 로컬스토리지 key를 통해 지움
         localStorage.removeItem(item);
 
         // memoArr 에서도 삭제
         memoArr.splice(index, 1);
       }
+      // 키값을 이용해서 정렬하기(오름차순)
+      memoArr.sort((a, b) => {
+        if (a.id > b.id) return 1;
+        if (a.id === b.id) return 0;
+        if (a.id < b.id) return -1;
+      });
 
-
-      const updateMemo = (item) => {
+      const updateMemo = (item, index) => {
         localStorage.removeItem(item.id);
-        item.complete = !item.complete;
+        // item.complete = !item.complete;
+        memoArr[index].complete = !memoArr[index].complete
         localStorage.setItem(item.id, JSON.stringify(item));
 
+        // 키값을 이용해서 정렬하기(오름차순)
+        memoArr.sort((a, b) => {
+          if (a.id > b.id) return 1;
+          if (a.id === b.id) return 0;
+          if (a.id < b.id) return -1;
+        });
       }
 
-      const deleteAllMemo = () =>{
+      const deleteAllMemo = () => {
         localStorage.clear();
         memoArr.splice(0);
+      }
+
+      const introShow = ref(true);
+      const hideIntro = () => {
+        introShow.value = false;
       }
 
       return {
@@ -93,7 +121,9 @@
         addMemo,
         deleteMemo,
         updateMemo,
-        deleteAllMemo
+        deleteAllMemo,
+        hideIntro,
+        introShow
       }
     }
   }
