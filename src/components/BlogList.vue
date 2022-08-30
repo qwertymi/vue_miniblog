@@ -1,6 +1,6 @@
 <template>
 	<div class="list-wrap">
-		<ul>
+		<TransitionGroup name="list" tag="ul">
 			<!-- 새로고침없이 업데이트를 위해 props(memodata) 이용 -->
 			<li v-for="(item,index) in memodata" :key="index" class="shadow">
 
@@ -16,7 +16,7 @@
 				</div>
 
 			</li>
-		</ul>
+		</TransitionGroup>
 	</div>
 </template>
 
@@ -106,4 +106,17 @@
 		color: hotpink;
 		text-decoration: line-through;
 	}
-</style>
+
+	/* 애니메이션 */
+	.list-enter-active,
+	.list-leave-active {
+		transition: all 0.5s ease;
+	}
+
+	.list-enter-from,
+	.list-leave-to {
+		opacity: 0;
+		transform: translateX(30px);
+	}
+
+	</style>

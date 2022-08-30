@@ -14,18 +14,30 @@
 				<i class="far fa-plus-square addbt-icon"></i>
 			</span>
 		</div>
-
+		<!-- 입력경고 modal -->
+		<ModalView :show="showModal" @closemodal="showModal=false">
+			<template #header>
+				<h4>알림</h4>
+			</template>
+			<template #body>
+				<span>내용을 작성하세요.</span>
+			</template>
+		</ModalView>
 	</div>
 </template>
 
 <script>
-	import {
-		ref
-	} from 'vue'
+	import ModalView from '@/components/common/ModalView.vue'
+
+	import {ref} from 'vue'
 	export default {
+		components: {
+			ModalView
+		},
 		setup(props, context) {
 			const newItem = ref('');
 			const newIcon = ref(0);
+			const showModal = ref(false);
 
 			const addItem = () => {
 				let temp = newItem.value;
@@ -35,6 +47,8 @@
 				if (temp !== '') {
 					context.emit("additem", temp, icon);
 					resetItem();
+				}else{
+					showModal.value = true;
 				}
 			}
 			const resetItem = () => {
@@ -47,6 +61,7 @@
 			}
 
 			return {
+				showModal,
 				newItem,
 				addItem,
 				addIcon
@@ -108,7 +123,9 @@
 		background: url('@/assets/images/icon2.png') no-repeat center;
 		background-size: cover;
 	}
-	.img1:active, .img2:active{
+
+	.img1:active,
+	.img2:active {
 		outline: 2px dashed hotpink;
 	}
 
