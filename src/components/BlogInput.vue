@@ -28,13 +28,16 @@
 
 <script>
 	import ModalView from '@/components/common/ModalView.vue'
-
+	import {useStore} from 'vuex'
 	import {ref} from 'vue'
+
 	export default {
 		components: {
 			ModalView
 		},
-		setup(props, context) {
+		setup() {
+			const store = useStore();
+
 			const newItem = ref('');
 			const newIcon = ref(0);
 			const showModal = ref(false);
@@ -45,7 +48,11 @@
 				temp = temp.trim()
 
 				if (temp !== '') {
-					context.emit("additem", temp, icon);
+					// context.emit("additem", temp, icon);
+					
+					// store.commit('ADD_MEMO', {item: temp, index: icon});
+					store.dispatch('fetchAddMemo', {item: temp, index: icon});
+
 					resetItem();
 				}else{
 					showModal.value = true;

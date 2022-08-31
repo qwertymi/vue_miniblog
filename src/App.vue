@@ -1,9 +1,9 @@
 <template>
   <div class="wrap">
     <BlogHeader />
-    <BlogInput @additem="addMemo" />
-    <BlogList :memodata="memoArr" @removeitem="deleteMemo" @updateitem="updateMemo" />
-    <BlogFooter @deleteitem="deleteAllMemo" />
+    <BlogInput />
+    <BlogList @removeitem="deleteMemo" @updateitem="updateMemo" />
+    <BlogFooter />
     <IntroView @closeintro="hideIntro" v-if="introShow" />
   </div>
 </template>
@@ -17,7 +17,7 @@
 
   import {
     ref,
-    reactive
+
   } from 'vue';
 
   export default {
@@ -30,86 +30,6 @@
       IntroView
     },
     setup() {
-      const total = ref(0);
-      total.value = localStorage.length;
-
-      const memoArr = reactive([]);
-
-      if (total.value > 0) {
-        for (let i = 0; i < total.value; i++) {
-          let obj = localStorage.getItem(localStorage.key(i));
-
-          memoArr.push(JSON.parse(obj));
-        }
-        // memoArr.sort();
-      }
-
-
-      // 현재시간계산, 중복되지않는 값을 저장
-      // 10보다 작은 값에 0을 붙임
-      const addZero = (n) => {
-        return n < 10 ? '0' + n : n;
-      }
-      // 현재 시간을 리턴
-      const getCurrentDate = () => {
-        let date = new Date();
-        return date.getFullYear().toString() + addZero(date.getMonth() + 1) + addZero(date.getDate()) +
-          addZero(date.getHours()) + addZero(date.getMinutes()) + addZero(date.getSeconds());
-      }
-      const getCurrentTime = () => {
-        let date = new Date();
-        return date.getFullYear().toString() + "년 " + addZero(date.getMonth() + 1) + "월 " + addZero(date.getDate()) +
-          "일 " +
-          addZero(date.getHours()) + ":" + addZero(date.getMinutes())
-      }
-
-      const iconArr = ['icon1.png', 'icon2.png'];
-
-      const addMemo = (item, index) => {
-        let memoTemp = {
-          id: getCurrentDate(),
-          complete: false,
-          memotitle: item,
-          memodate: getCurrentTime(),
-          memoicon: iconArr[index]
-        };
-        localStorage.setItem(memoTemp.id, JSON.stringify(memoTemp));
-        memoArr.push(memoTemp);
-      }
-
-
-      const deleteMemo = (item, index) => {
-        // 로컬스토리지 key를 통해 지움
-        localStorage.removeItem(item);
-
-        // memoArr 에서도 삭제
-        memoArr.splice(index, 1);
-      }
-      // 키값을 이용해서 정렬하기(오름차순)
-      memoArr.sort((a, b) => {
-        if (a.id > b.id) return 1;
-        if (a.id === b.id) return 0;
-        if (a.id < b.id) return -1;
-      });
-
-      const updateMemo = (item, index) => {
-        localStorage.removeItem(item.id);
-        // item.complete = !item.complete;
-        memoArr[index].complete = !memoArr[index].complete
-        localStorage.setItem(item.id, JSON.stringify(item));
-
-        // 키값을 이용해서 정렬하기(오름차순)
-        memoArr.sort((a, b) => {
-          if (a.id > b.id) return 1;
-          if (a.id === b.id) return 0;
-          if (a.id < b.id) return -1;
-        });
-      }
-
-      const deleteAllMemo = () => {
-        localStorage.clear();
-        memoArr.splice(0);
-      }
 
       const introShow = ref(true);
       const hideIntro = () => {
@@ -117,11 +37,6 @@
       }
 
       return {
-        memoArr,
-        addMemo,
-        deleteMemo,
-        updateMemo,
-        deleteAllMemo,
         hideIntro,
         introShow
       }

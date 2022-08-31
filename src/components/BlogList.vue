@@ -2,7 +2,7 @@
 	<div class="list-wrap">
 		<TransitionGroup name="list" tag="ul">
 			<!-- 새로고침없이 업데이트를 위해 props(memodata) 이용 -->
-			<li v-for="(item,index) in memodata" :key="index" class="shadow">
+			<li v-for="(item,index) in items" :key="index" class="shadow">
 
 				<i class="far fa-check-square checkbt" @click="updateMemo(item, index)"
 					:class="{memoComplete:item.complete}"></i>
@@ -21,23 +21,35 @@
 </template>
 
 <script>
-	export default {
-		props: ['memodata'],
+	import {useStore} from 'vuex'
+	import {ref} from 'vue'
 
-		setup(props, context) {
+
+	export default {
+
+		setup() {
+
+			const store = useStore();
+			const items = ref([]);
+			items.value = store.state.memoArr;
 
 			const removeMemo = (item, index) => {
-				context.emit('removeitem', item, index);
+				// context.emit('removeitem', item, index);
+				// store.commit('DELETE_MEMO', {item, index})
+				store.dispatch('fetchDeleteMemo', {item, index})
 			}
 
 			// check
 			const updateMemo = (item, index) => {
-				context.emit("updateitem", item, index)
+				// context.emit("updateitem", item, index)
+				// store.commit('UPDATE_MEMO', {item, index})
+				store.dispatch('fetchUpdateMemo', {item, index})
 			}
 
 			return {
 				removeMemo,
-				updateMemo
+				updateMemo,
+				items
 			}
 		}
 

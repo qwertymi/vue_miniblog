@@ -1,16 +1,27 @@
 <template>
-	<header>
-		<h1>
-			TODO List
-		</h1>
-	</header>
+  <header class="header">
+    <h1>{{title}}</h1>
+  </header>
 </template>
 
 <script>
-	export default {
+import {ref} from 'vue'
+import {useStore} from 'vuex'
 
-	}
+export default {
+  setup(){
+    const title = ref('');
+    const store = useStore();
+    title.value = store.state.headerText;
+
+    return{
+      title
+    }
+  }
+
+}
 </script>
+
 
 <style>
 	h1 {
