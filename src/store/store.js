@@ -44,7 +44,7 @@ const timeUtil = {
 export default createStore({
   // 공통으로 관리하는 데이터
   state: {
-    headerText: 'My Diary Memo',
+    headerText: 'TODO List',
     memoArr: storage.getData(),
     iconArr: ['icon1.png', 'icon2.png']
   },
