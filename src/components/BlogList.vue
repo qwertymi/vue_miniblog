@@ -10,7 +10,8 @@
 				<span :class="{memoCompleteTxt:item.complete}">{{item.memotitle}}</span>
 
 				<div class="info">
-					<span class="icon" :style="{backgroundImage:'url(' + require(`@/assets/images/${item.memoicon}`) + ')'}"></span>
+					<span class="icon"
+						:style="{backgroundImage:'url(' + require(`@/assets/images/${item.memoicon}`) + ')'}"></span>
 					<span class="date">{{item.memodate}}</span>
 					<span class="rmbt" @click="removeMemo(item.id, index)"><i class="far fa-trash-alt"></i></span>
 				</div>
@@ -21,8 +22,12 @@
 </template>
 
 <script>
-	import {useStore} from 'vuex'
-	import {ref} from 'vue'
+	import {
+		useStore
+	} from 'vuex'
+	import {
+		computed
+	} from 'vue'
 
 
 	export default {
@@ -30,20 +35,25 @@
 		setup() {
 
 			const store = useStore();
-			const items = ref([]);
-			items.value = store.state.memoArr;
+			const items = computed(() => store.getters.getMemoArr);
 
 			const removeMemo = (item, index) => {
 				// context.emit('removeitem', item, index);
 				// store.commit('DELETE_MEMO', {item, index})
-				store.dispatch('fetchDeleteMemo', {item, index})
+				store.dispatch('fetchDeleteMemo', {
+					item,
+					index
+				});
 			}
 
 			// check
 			const updateMemo = (item, index) => {
 				// context.emit("updateitem", item, index)
 				// store.commit('UPDATE_MEMO', {item, index})
-				store.dispatch('fetchUpdateMemo', {item, index})
+				store.dispatch('fetchUpdateMemo', {
+					item,
+					index
+				});
 			}
 
 			return {
@@ -88,7 +98,7 @@
 	}
 
 	.date {
-				vertical-align: top;
+		vertical-align: top;
 	}
 
 	.rmbt {
@@ -130,5 +140,4 @@
 		opacity: 0;
 		transform: translateX(30px);
 	}
-
-	</style>
+</style>
