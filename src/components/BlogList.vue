@@ -1,6 +1,6 @@
 <template>
 	<div class="list-wrap">
-		<TransitionGroup name="list" tag="ul">
+			<TransitionGroup name="list" tag="ul">
 			<!-- 새로고침없이 업데이트를 위해 props(memodata) 이용 -->
 			<li v-for="(item,index) in items" :key="index" class="shadow">
 
@@ -22,12 +22,8 @@
 </template>
 
 <script>
-	import {
-		useStore
-	} from 'vuex'
-	import {
-		computed
-	} from 'vue'
+	import {useStore} from 'vuex'
+	import {computed} from 'vue'
 
 
 	export default {
@@ -35,15 +31,15 @@
 		setup() {
 
 			const store = useStore();
+			// php서버 
+			store.dispatch('fetchReadMemo');
 			const items = computed(() => store.getters.getMemoArr);
 
-			const removeMemo = (item, index) => {
+			const removeMemo = (id, index) => {
 				// context.emit('removeitem', item, index);
 				// store.commit('DELETE_MEMO', {item, index})
-				store.dispatch('fetchDeleteMemo', {
-					item,
-					index
-				});
+				console.log('삭제버튼', id);
+				store.dispatch('fetchDeleteMemo', {id, index});
 			}
 
 			// check
